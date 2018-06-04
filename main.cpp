@@ -4,10 +4,12 @@
 #include <GL/glut.h>
 #include "BasicCad.h"
 #include "cacham.h"
+bool khoidau =true;
+bool dichuyentamnhin = true;;
 /*--------------
 Cac bien de thay doi LookAt
 --------------*/
-GLfloat eyex=0,eyey=5,eyez=6,centerx=0,centery=3,centerz=0,upx=0,upy=1,upz=0;
+GLfloat eyex=-8,eyey=0,eyez=-8,centerx=0,centery=3,centerz=0,upx=0,upy=1,upz=0;
 //*-----------------------------------------------------------------------------------------------
 
 /*------------------------------------------------
@@ -21,12 +23,13 @@ GLfloat chieudai_ngonTro,chieudai_ngonGiua,chieudai_ngonAput,chieudai_ngonUt,chi
 /*------------------------------------------------------------
 Cac bien kiem soat goc quay cua ngon tay,ban tay,canh tay....
 -------------------------------------------------------------*/
-GLint spin =0,khuyu_tay_angle=0,canh_tay_angle=0,ban_tay_angle=0;
+GLint spin =0,khuyu_tay_angle=0,canh_tay_angle=0,ban_tay_angle=0,canh_tay_angle_y=0,ban_tay_angle_y=0;
 GLint angle_ngonCai_dot1=0,angle_ngonCai_dot2=0;
 GLint angle_ngonTro_dot1=0,angle_ngonTro_dot2=0,angle_ngonTro_dot3=0;
 GLint angle_ngonGiua_dot1=0,angle_ngonGiua_dot2=0,angle_ngonGiua_dot3=0;
 GLint angle_ngonAput_dot1=0,angle_ngonAput_dot2=0, angle_ngonAput_dot3=0;
 GLint angle_ngonUt_dot1=0,angle_ngonUt_dot2=0,angle_ngonUt_dot3=0;
+GLint angle_tocdonambantay = 6;
 /////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
 
@@ -57,6 +60,7 @@ void keyboard(unsigned char key,int a ,int b);
 void onSpecialKeyDown(int key,int x,int y);
 void veheTrucToaDo();
 void vaytay();
+void nambantay1();
 //////////////////////////////////////////////////////////////////////////
 int main(int argc, char** argv)
 {
@@ -70,16 +74,17 @@ glutDisplayFunc(display);
 glutReshapeFunc(reshape);
 glutKeyboardFunc(keyboard);
 glutSpecialFunc(onSpecialKeyDown);
-
+//glutIdleFunc(vaytay);
 glutMainLoop();
 return 0;
 }
 bool vaytay1=true;
 void vaytay()
 {
-	if(vaytay)
+	if(vaytay1)
 	{
 		khuyu_tay_angle+=3;
+		ban_tay_angle_y+=6;
 		if(khuyu_tay_angle>25)
 		{
 			vaytay1=false;
@@ -89,6 +94,7 @@ void vaytay()
 	if(!vaytay1)
 	{
 		khuyu_tay_angle-=3;
+		ban_tay_angle_y-=6;
 		if(khuyu_tay_angle<-25)
 		{
 			vaytay1=true;
@@ -98,19 +104,19 @@ void vaytay()
 }
 void nambantay()
 {
-			angle_ngonCai_dot1+=3;
-			angle_ngonTro_dot1+=3;
-			angle_ngonGiua_dot1+=3;
-			angle_ngonAput_dot1+=3;
-			angle_ngonUt_dot1+=3;
+			angle_ngonCai_dot1+=angle_tocdonambantay;
+			angle_ngonTro_dot1+=angle_tocdonambantay;
+			angle_ngonGiua_dot1+=angle_tocdonambantay;
+			angle_ngonAput_dot1+=angle_tocdonambantay;
+			angle_ngonUt_dot1+=angle_tocdonambantay;
 			if(angle_ngonUt_dot1>85)
 			{
 				angle_ngonUt_dot1=85;
-				angle_ngonUt_dot2+=3;
+				angle_ngonUt_dot2+=angle_tocdonambantay;
 				if(angle_ngonUt_dot2>80)
 				{
 					angle_ngonUt_dot2=80;
-					angle_ngonUt_dot3+=3;
+					angle_ngonUt_dot3+=angle_tocdonambantay;
 					if(angle_ngonUt_dot3>65)
 						angle_ngonUt_dot3=65;
 				}
@@ -118,11 +124,11 @@ void nambantay()
 			if(angle_ngonAput_dot1>85)
 			{
 				angle_ngonAput_dot1=85;
-				angle_ngonAput_dot2+=3;
+				angle_ngonAput_dot2+=angle_tocdonambantay;
 				if(angle_ngonAput_dot2>80)
 				{
 					angle_ngonAput_dot2=80;
-					angle_ngonAput_dot3+=3;
+					angle_ngonAput_dot3+=angle_tocdonambantay;
 					if(angle_ngonAput_dot3>65)
 						angle_ngonAput_dot3=65;
 				}
@@ -130,11 +136,11 @@ void nambantay()
 			if(angle_ngonTro_dot1>85)
 			{
 				angle_ngonTro_dot1=85;
-				angle_ngonTro_dot2+=3;
+				angle_ngonTro_dot2+=angle_tocdonambantay;
 				if(angle_ngonTro_dot2>80)
 				{
 					angle_ngonTro_dot2=80;
-					angle_ngonTro_dot3+=3;
+					angle_ngonTro_dot3+=angle_tocdonambantay;
 					if(angle_ngonTro_dot3>65)
 						angle_ngonTro_dot3=65;
 				}
@@ -142,12 +148,12 @@ void nambantay()
 			if(angle_ngonGiua_dot1>85)
 			{
 				angle_ngonGiua_dot1=85;
-				angle_ngonGiua_dot2+=3;
+				angle_ngonGiua_dot2+=angle_tocdonambantay;
 				if(angle_ngonGiua_dot2>80)
 				{
 					angle_ngonGiua_dot2=80;
 					
-					angle_ngonGiua_dot3+=3;
+					angle_ngonGiua_dot3+=angle_tocdonambantay;
 					if(angle_ngonGiua_dot3>65)
 						angle_ngonGiua_dot3=65;
 				}	
@@ -156,21 +162,82 @@ void nambantay()
 				angle_ngonCai_dot1=170;
 
 }
+
+void nambantay1()
+{
+			angle_ngonCai_dot1+=angle_tocdonambantay;
+			angle_ngonTro_dot3+=angle_tocdonambantay;
+			angle_ngonGiua_dot3+=angle_tocdonambantay;
+			angle_ngonAput_dot3+=angle_tocdonambantay;
+			angle_ngonUt_dot3+=angle_tocdonambantay;
+			if(angle_ngonUt_dot3>65)
+			{
+				angle_ngonUt_dot3=65;
+				angle_ngonUt_dot2+=angle_tocdonambantay;
+				if(angle_ngonUt_dot2>80)
+				{
+					angle_ngonUt_dot2=80;
+					angle_ngonUt_dot1+=angle_tocdonambantay;
+					if(angle_ngonUt_dot1>85)
+						angle_ngonUt_dot1=85;
+				}
+			}
+			if(angle_ngonAput_dot3>65)
+			{
+				angle_ngonAput_dot3=65;
+				angle_ngonAput_dot2+=angle_tocdonambantay;
+				if(angle_ngonAput_dot2>80)
+				{
+					angle_ngonAput_dot2=80;
+					angle_ngonAput_dot1+=angle_tocdonambantay;
+					if(angle_ngonAput_dot1>85)
+						angle_ngonAput_dot1=85;
+				}
+			}
+			if(angle_ngonTro_dot3>65)
+			{
+				angle_ngonTro_dot3=65;
+				angle_ngonTro_dot2+=angle_tocdonambantay;
+				if(angle_ngonTro_dot2>80)
+				{
+					angle_ngonTro_dot2=80;
+					angle_ngonTro_dot1+=angle_tocdonambantay;
+					if(angle_ngonTro_dot1>85)
+						angle_ngonTro_dot1=85;
+				}
+			}
+			if(angle_ngonGiua_dot3>65)
+			{
+				angle_ngonGiua_dot3=65;
+				angle_ngonGiua_dot2+=angle_tocdonambantay;
+				if(angle_ngonGiua_dot2>80)
+				{
+					angle_ngonGiua_dot2=80;
+					
+					angle_ngonGiua_dot1+=angle_tocdonambantay;
+					if(angle_ngonGiua_dot1>85)
+						angle_ngonGiua_dot1=85;
+				}	
+			}		
+			if(angle_ngonCai_dot1>170)
+				angle_ngonCai_dot1=170;
+
+}
 void mobantay()
 {
-			angle_ngonCai_dot1-=3;
-			angle_ngonTro_dot1-=3;
-			angle_ngonGiua_dot1-=3;
-			angle_ngonAput_dot1-=3;
-			angle_ngonUt_dot1-=3;
+			angle_ngonCai_dot1-=angle_tocdonambantay;
+			angle_ngonTro_dot1-=angle_tocdonambantay;
+			angle_ngonGiua_dot1-=angle_tocdonambantay;
+			angle_ngonAput_dot1-=angle_tocdonambantay;
+			angle_ngonUt_dot1-=angle_tocdonambantay;
 			if(angle_ngonUt_dot1<0)
 			{
 				angle_ngonUt_dot1=0;
-				angle_ngonUt_dot2-=3;
+				angle_ngonUt_dot2-=angle_tocdonambantay;
 				if(angle_ngonUt_dot2<0)
 				{
 					angle_ngonUt_dot2=0;
-					angle_ngonUt_dot3-=3;
+					angle_ngonUt_dot3-=angle_tocdonambantay;
 					if(angle_ngonUt_dot3<0)
 						angle_ngonUt_dot3=0;
 				}
@@ -178,11 +245,11 @@ void mobantay()
 			if(angle_ngonAput_dot1<0)
 			{
 				angle_ngonAput_dot1=0;
-				angle_ngonAput_dot2-=3;
+				angle_ngonAput_dot2-=angle_tocdonambantay;
 				if(angle_ngonAput_dot2<0)
 				{
 					angle_ngonAput_dot2=0;
-					angle_ngonAput_dot3-=3;
+					angle_ngonAput_dot3-=angle_tocdonambantay;
 					if(angle_ngonAput_dot3<0)
 						angle_ngonAput_dot3=0;
 				}
@@ -190,11 +257,11 @@ void mobantay()
 			if(angle_ngonTro_dot1<0)
 			{
 				angle_ngonTro_dot1=0;
-				angle_ngonTro_dot2-=3;
+				angle_ngonTro_dot2-=angle_tocdonambantay;
 				if(angle_ngonTro_dot2<0)
 				{
 					angle_ngonTro_dot2=0;
-					angle_ngonTro_dot3-=3;
+					angle_ngonTro_dot3-=angle_tocdonambantay;
 					if(angle_ngonTro_dot3<0)
 						angle_ngonTro_dot3=0;
 				}
@@ -202,12 +269,12 @@ void mobantay()
 			if(angle_ngonGiua_dot1<0)
 			{
 				angle_ngonGiua_dot1=0;
-				angle_ngonGiua_dot2-=3;
+				angle_ngonGiua_dot2-=angle_tocdonambantay;
 				if(angle_ngonGiua_dot2<0)
 				{
 					angle_ngonGiua_dot2=0;
 					
-					angle_ngonGiua_dot3-=3;
+					angle_ngonGiua_dot3-=angle_tocdonambantay;
 					if(angle_ngonGiua_dot3<0)
 						angle_ngonGiua_dot3=0;
 				}	
@@ -218,10 +285,10 @@ void mobantay()
 }
 void xoaycotay(void)
 {
-	ban_tay_angle+=3;
-	if(ban_tay_angle>30)
+	ban_tay_angle_y+=3;
+	if(ban_tay_angle_y>80)
 	{
-		ban_tay_angle=30;
+		ban_tay_angle_y=80;
 	}
 	//glutPostRediplay();
 }
@@ -271,6 +338,8 @@ glPushMatrix();
 			Khu vuc Ban tay
 		---------------------------------*/
 		glPushMatrix();
+			glDisable(GL_LIGHTING);
+			glColor3f(0.1,0.5,0.1);
 			glTranslatef(0,chieudai_canhtay/2,0);
 			/*---------------------------------
 				Phan co tay
@@ -278,10 +347,9 @@ glPushMatrix();
 			glPushMatrix();
 				glCallList(co_tay);			
 			glPopMatrix();
-			glTranslatef(0,0,-0.25);
-			glRotatef(ban_tay_angle,0,0,1);
-			
-			glTranslatef(0,0,0.25);
+			//glTranslatef(0,0,-0.25); Xoay theo truc Z thi can
+			glRotatef(ban_tay_angle_y,0,1,0);			
+			//glTranslatef(0,0,0.25);
 			glTranslatef(0,chieudai_bantay/2,0); 	
 			glCallList(ban_tay);
 			
@@ -430,7 +498,7 @@ glPushMatrix();
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
-			
+			glEnable(GL_LIGHTING);
 		glPopMatrix();
 	glPopMatrix();
 	
@@ -563,6 +631,28 @@ for(int i =0;i<10;i+=2)
 		glPopMatrix();
 	}
 }
+
+if(dichuyentamnhin)
+{
+	eyex+=0.1;
+	if(eyey<8)
+	{
+		eyey+=0.1;
+		eyez+=0.2;
+	}
+//	glutPostRedisplay();
+	if(eyex>=8)
+	{
+		dichuyentamnhin = false;
+	}
+}
+if(khoidau)
+{
+		
+	glutIdleFunc(vaytay);
+	glutPostRedisplay();
+}
+
 glFlush ();
 }
 void reshape (int w, int h)
@@ -620,15 +710,31 @@ void keyboard (unsigned char key, int a, int b)
 				canh_tay_angle=0;
 		glutPostRedisplay();
 		break;
+		case 'n' :
+			nambantay1();
+			glutPostRedisplay();
+			break;
+		case 'm' :
+			mobantay();
+			glutPostRedisplay();
+			break;
 		default:
 		break;
 	}
 }
-
 void onSpecialKeyDown(int key, int x,int y)
 {
 	switch(key)
 	{
+		case GLUT_KEY_F1 : 
+			khoidau=false;
+			glutIdleFunc(NULL);
+			break;
+		case GLUT_KEY_F2 : 
+			khoidau=true;
+			glutIdleFunc(vaytay);
+			glutPostRedisplay();
+			break;
 		case GLUT_KEY_UP :
 			eyez -=0.2;
 			glutPostRedisplay();
