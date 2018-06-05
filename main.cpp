@@ -98,9 +98,10 @@ GLuint daungonGiua;
 	//cac su kien cu dong
 void vetay();
 void nambantay();
+void nambantay1();
+
 void mobantay();
 void vaytay();
-void nambantay1();
 void nguacotay();
 void gapcotay();
 void ratruong();
@@ -132,7 +133,7 @@ glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 glutInitWindowSize (500,500);
 glutInitWindowPosition (100, 100);
 glutCreateWindow (argv[0]);
-//loadtexture("danguoi.bmp");
+loadtexture("index.bmp");
 init ();
 glutDisplayFunc(display);
 glutReshapeFunc(reshape);
@@ -167,7 +168,7 @@ void init(void)
 	ngonUt1 = BasicCad::MakeBox(0.14,0.27,0.14);
    daungonGiua =BasicCad::MakeShpere(0.1);
 	glClearColor(0,0,0,0);
-	glShadeModel (GL_SMOOTH);
+	glShadeModel (GL_SMOOTH);  //Tao do tron de chieu sang 
 
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
@@ -176,7 +177,7 @@ void init(void)
    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
    
- //  glEnable(GL_LIGHTING);
+   glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_DEPTH_TEST);

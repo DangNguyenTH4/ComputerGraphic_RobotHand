@@ -76,9 +76,17 @@ GLuint BasicCad::MakeBox( const float& length, const float& height, const float&
 	GLuint dp_list;
 	dp_list =glGenLists(1);
 	glNewList(dp_list,GL_COMPILE);
-	//Back
 	 glBegin(GL_QUADS);
+	
+	//front
+	glNormal3f(0,0,1);
+//	glTexCoord2f(0,0);
+	glVertex3f(-x,-y,z);
+	glVertex3f(x,-y,z);
+	glVertex3f(x,y,z);
+	glVertex3f(-x,y,z);
 
+	//Back
 	glNormal3f(0,0,-1);
 	glVertex3f(-x,-y,-z);
 	glVertex3f(x,-y,-z);
@@ -95,16 +103,9 @@ GLuint BasicCad::MakeBox( const float& length, const float& height, const float&
 	glVertex3f(-x,y,z);
 	glVertex3f(-x,y,-z);
 	//glEnd();
-	
-	//front
-	//glBegin(GL_QUADS);
-	glNormal3f(0,0,1);
-//	glTexCoord2f(0,0);
-	glVertex3f(-x,y,z);
-	glVertex3f(x,y,z);
-	glVertex3f(x,-y,z);
-	glVertex3f(-x,-y,z);
 	//glEnd();	
+	//glBegin(GL_QUADS);
+	
 	//right
 	//glBegin(GL_QUADS);
 	glNormal3f(0,1,0);
@@ -113,6 +114,7 @@ GLuint BasicCad::MakeBox( const float& length, const float& height, const float&
 	glVertex3f(x,-y,-z);
 	glVertex3f(x,-y,z);
 	glEnd();	
+	
 	//top
 	//glBegin(GL_QUADS);
 	glNormal3f(0,1,0);
@@ -121,6 +123,7 @@ GLuint BasicCad::MakeBox( const float& length, const float& height, const float&
 	glVertex3f(-x,y,-z);
 	glVertex3f(x,y,-z);
 	//glEnd();	
+	
 	//bottom
 	//glBegin(GL_QUADS);
 	glNormal3f(0,-1,0);
@@ -221,9 +224,13 @@ GLuint BasicCad::MakeFrustumShape(const float& bottom_size,const float& top_size
 	glBegin(GL_QUADS);
 	//Front
 	glNormal3f(0,0,1);
+	//glTexCoord2f(0,0);
 	glVertex3f(-bot,-halfHeight,bot);
+	//glTexCoord2f(1,0);
 	glVertex3f(bot,-halfHeight,bot);
+	//glTexCoord2f(1,1);
 	glVertex3f(top,halfHeight,top);
+	//glTexCoord2f(0,1);
 	glVertex3f(-top,halfHeight,top);
 	//Left
 	glNormal3f(-1,0,0);
