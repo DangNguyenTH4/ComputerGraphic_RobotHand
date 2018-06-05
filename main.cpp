@@ -2,15 +2,43 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include <GL/GLAUX.h>
+//#include <fstream>
+#include <stdio.h>
+#include <windows.h>
+#include <math.h>
+
 #include "BasicCad.h"
-#include "cacham.h"
+#include "BmpLoader.h"
 bool khoidau =true;
 bool dichuyentamnhin = true;;
 /*--------------
 Cac bien de thay doi LookAt
 --------------*/
 GLfloat eyex=-8,eyey=0,eyez=-8,centerx=0,centery=3,centerz=0,upx=0,upy=1,upz=0;
+
+//camera quay quanh oy
+GLfloat angle_camera =0.0,delta_camera=0.0;
+GLfloat x_now;
+static GLfloat Dis_cam_to_Oy;
+bool mouse_clicked=false;
+//camera quay canh oz
+static GLfloat Dis_cam_to_Oz;
+GLfloat angle_camera1 =0.0,delta_camera1=0.0;
+GLfloat y_now;
+bool mouseRight_clicked = false;
 //*-----------------------------------------------------------------------------------------------
+
+/***********************************
+	Phan texture
+**********************************/
+GLuint texture;
+char arr_texture_file[20]={"danguoi.bmp"};
+void loadtexture(const char* filename);
+
+
+//////////////////////////////////////////////////
+
 
 /*---------------------------------------------
 	Kiem soat anh sang
@@ -40,7 +68,7 @@ GLfloat chieudai_ngonTro,chieudai_ngonGiua,chieudai_ngonAput,chieudai_ngonUt,chi
 /*------------------------------------------------------------
 Cac bien kiem soat goc quay cua ngon tay,ban tay,canh tay....
 -------------------------------------------------------------*/
-GLint spin =0,khuyu_tay_angle=0,canh_tay_angle=0,ban_tay_angle=0,canh_tay_angle_y=0,ban_tay_angle_y=0;
+GLint khuyu_tay_angle=0,canh_tay_angle=0,ban_tay_angle=0,canh_tay_angle_y=0,ban_tay_angle_y=0;
 GLint angle_ngonCai_dot1=0,angle_ngonCai_dot2=0;
 GLint angle_ngonTro_dot1=0,angle_ngonTro_dot2=0,angle_ngonTro_dot3=0;
 GLint angle_ngonGiua_dot1=0,angle_ngonGiua_dot2=0,angle_ngonGiua_dot3=0;
@@ -90,9 +118,12 @@ void keyboard(unsigned char key,int a ,int b);
 void keyboardUp(unsigned char key,int a ,int b);
 void onSpecialKeyDown(int key,int x,int y);
 void onSpecialKeyUp(int key,int x,int y);
+void mousemove(int x,int y);
+void mouseclick(int type,int state,int x,int y);
+
 void veheTrucToaDo();
 void setlightingcolor(float* mangmau);
-
+void refresh();
 //////////////////////////////////////////////////////////////////////////
 int main(int argc, char** argv)
 {
@@ -101,9 +132,12 @@ glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 glutInitWindowSize (500,500);
 glutInitWindowPosition (100, 100);
 glutCreateWindow (argv[0]);
+//loadtexture("danguoi.bmp");
 init ();
 glutDisplayFunc(display);
 glutReshapeFunc(reshape);
+glutMouseFunc(mouseclick);
+glutMotionFunc(mousemove);
 glutKeyboardFunc(keyboard);
 glutSpecialFunc(onSpecialKeyDown);
 glutSpecialUpFunc(onSpecialKeyUp);
@@ -144,6 +178,7 @@ void init(void)
    
  //  glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
+   glEnable(GL_TEXTURE_2D);
    glEnable(GL_DEPTH_TEST);
 }
 
@@ -1029,6 +1064,59 @@ glPopMatrix();
 /**********************************
 	Cac ham bat su kien nhan phim
 **********************************/
+void mouseclick(int type,int state,int x,int y)
+{
+	if(type ==GLUT_LEFT_BUTTON)
+	{
+		if(state==GLUT_DOWN)
+		{
+			mouse_clicked=true;
+			x_now = x;
+			Dis_cam_to_Oy=sqrt(eyex*eyex+eyez*eyez);
+		}
+		else
+		{
+			mouse_clicked =false;
+			angle_camera+=delta_camera;
+			x_now = -1;
+		}
+	}
+	else if(type==GLUT_RIGHT_BUTTON)
+	{
+		if(state==GLUT_DOWN)
+		{
+			mouseRight_clicked=true;
+			y_now = y;
+			Dis_cam_to_Oz=sqrt(eyex*eyex+eyey*eyey);
+		}
+		else
+		{
+			mouseRight_clicked=false;
+			angle_camera1+=delta_camera1;
+			y_now = -1;
+		}
+	}
+	
+}
+
+void mousemove(int x,int y)
+{
+	if(mouse_clicked)
+	{
+		delta_camera = (x-x_now)*0.02f;
+		eyex = Dis_cam_to_Oy*sin(angle_camera-delta_camera);
+		eyez = Dis_cam_to_Oy*cos(angle_camera-delta_camera);
+		glutPostRedisplay();
+	}
+	else if (mouseRight_clicked)
+	{
+		delta_camera1 = (y - y_now)*0.02;
+		eyex = Dis_cam_to_Oz*sin(angle_camera1-delta_camera1);
+		eyey =Dis_cam_to_Oz*cos(angle_camera1-delta_camera1);
+		glutPostRedisplay();
+	}
+}
+
 void keyboardUp(unsigned char key,int a,int b)
 {
 	switch(key)
@@ -1140,6 +1228,10 @@ void onSpecialKeyDown(int key, int x,int y)
 			}
 			glutPostRedisplay();
 			break;
+		case GLUT_KEY_F5 :
+			refresh();
+			glutPostRedisplay();
+			break;
 		case GLUT_KEY_UP :
 			eyez -=0.2;
 			glutPostRedisplay();
@@ -1190,4 +1282,29 @@ void setlightingcolor(float* mangmau)
    				glLightfv(GL_LIGHT0, GL_AMBIENT, mangmau);
 				
 }
+void refresh()
+{
+khuyu_tay_angle=0;canh_tay_angle=0;ban_tay_angle=0;canh_tay_angle_y=0;ban_tay_angle_y=0;
+angle_ngonCai_dot1=0;angle_ngonCai_dot2=0;
+angle_ngonTro_dot1=0;angle_ngonTro_dot2=0;angle_ngonTro_dot3=0;
+angle_ngonGiua_dot1=0;angle_ngonGiua_dot2=0;angle_ngonGiua_dot3=0;
+angle_ngonAput_dot1=0;angle_ngonAput_dot2=0; angle_ngonAput_dot3=0;
+angle_ngonUt_dot1=0;angle_ngonUt_dot2=0;angle_ngonUt_dot3=0;
+eyex=8,eyey=8,eyez=8,centerx=0,centery=3,centerz=0,upx=0,upy=1,upz=0;
+}
 
+/**********************************
+	Load Textures
+************************************/
+void loadtexture(const char* filename)
+{
+	BmpLoader bl(filename);
+	glGenTextures(1,&khuyu_tay);
+	glBindTexture(GL_TEXTURE_2D,ban_tay);
+	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+	gluBuild2DMipmaps(GL_TEXTURE_2D,GL_RGB,bl.Width,bl.Height,GL_RGB,GL_UNSIGNED_BYTE,bl.textureData);
+}

@@ -86,6 +86,7 @@ GLuint BasicCad::MakeBox( const float& length, const float& height, const float&
 	glVertex3f(-x,y,-z);
 	
 	//glEnd();
+	
 	//left
 	//glBegin(GL_QUADS);
 	glNormal3f(-1,0,0);
@@ -94,9 +95,11 @@ GLuint BasicCad::MakeBox( const float& length, const float& height, const float&
 	glVertex3f(-x,y,z);
 	glVertex3f(-x,y,-z);
 	//glEnd();
+	
 	//front
 	//glBegin(GL_QUADS);
 	glNormal3f(0,0,1);
+//	glTexCoord2f(0,0);
 	glVertex3f(-x,y,z);
 	glVertex3f(x,y,z);
 	glVertex3f(x,-y,z);
