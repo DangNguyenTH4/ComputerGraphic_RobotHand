@@ -2,63 +2,57 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
-#include <GL/GLAUX.h>
-//#include <fstream>
 #include <stdio.h>
 #include <windows.h>
 #include <math.h>
-
 #include "BasicCad.h"
 #include "BmpLoader.h"
 bool khoidau =true;
 bool dichuyentamnhin = true;;
 /*--------------
 Cac bien de thay doi LookAt
---------------*/
+t--------------*/
 GLfloat eyex=-8,eyey=0,eyez=-8,centerx=0,centery=3,centerz=0,upx=0,upy=1,upz=0;
 
-//camera quay quanh oy
-GLfloat angle_camera =0.0,delta_camera=0.0;
-GLfloat x_now;
-static GLfloat Dis_cam_to_Oy;
+//khai bao bien camera quay quanh oy
+static GLfloat Dis_cam_to_Oy=8;
 bool mouse_clicked=false;
 //camera quay canh oz
-static GLfloat Dis_cam_to_Oz;
-GLfloat angle_camera1 =0.0,delta_camera1=0.0;
 GLfloat y_now;
 bool mouseRight_clicked = false;
 //*-----------------------------------------------------------------------------------------------
 
 /***********************************
-	Phan texture
+	Khai bao bien Phan texture
 **********************************/
 GLuint texture;
-char arr_texture_file[20]={"danguoi.bmp"};
+char addres_texture_file[20]="dragon.bmp";
 void loadtexture(const char* filename);
+void loadtexture(const char* filename,GLuint destination);
 
 
 //////////////////////////////////////////////////
 
 
 /*---------------------------------------------
-	Kiem soat anh sang
+	Khai bao bien Kiem soat anh sang
 ---------------------------------------------*/
 GLfloat mat_specular[] ={1,1,1,1};
-GLfloat mat_shininess[] = {50};
-GLfloat light_position[] = {1,1,1,0};
-GLfloat light_specular[] = {1,1,0}; // dinh nghia mau cua noi co cuong do manh nhat
-GLfloat light_diffuse[] = {1,1,0.4}; //Mau xxung quanh
-GLfloat light_ambient[] = {1,1,0};
-GLfloat light_ambient_trang[]={1,1,1};
-GLfloat light_diffuse_trang[]={1,1,1};
-GLfloat light_specular_trang[]={1,1,1};
+GLfloat mat_shininess[] = {10000};
+GLfloat light_position[] = {0,4,4,0};
+GLfloat light_specular[] = {1,1,1,1}; // dinh nghia mau cua noi co cuong do manh nhat
+GLfloat light_diffuse[] = {1,1,1,1}; //Mau xxung quanh
+GLfloat light_ambient[] = {1,1,1,1};
+GLfloat light_ambient_trang[]={1,1,1,1};
+GLfloat light_diffuse_trang[]={1,1,1,1};
+GLfloat light_specular_trang[]={1,1,1,1};
 GLfloat light_black[] = {0,0,0};
 
 GLfloat scalef_ratruong=1;
 GLfloat* light_ratruong = light_diffuse_trang;
 bool coratruong = false;
 /*------------------------------------------------
-Cac bien luu chu do dai khuyu tay,canh tay,ban tay
+	Khai bao bien luu chieu dai canh tay, khuyu tay..
 ------------------------------------------------*/
 GLfloat chieudai_khuyutay=3,chieudai_canhtay=2,chieudai_bantay=0.8;
 //chieu dai 1 dot moi ngon tay
@@ -66,10 +60,10 @@ GLfloat chieudai_ngonTro,chieudai_ngonGiua,chieudai_ngonAput,chieudai_ngonUt,chi
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 /*------------------------------------------------------------
-Cac bien kiem soat goc quay cua ngon tay,ban tay,canh tay....
+Khai bao bien kiem soat goc quay cua ngon tay,ban tay,canh tay....
 -------------------------------------------------------------*/
 GLint khuyu_tay_angle=0,canh_tay_angle=0,ban_tay_angle=0,canh_tay_angle_y=0,ban_tay_angle_y=0;
-GLint angle_ngonCai_dot1=0,angle_ngonCai_dot2=0;
+GLint angle_ngonCai_dot1=0,angle_ngonCai_dot2=0,angle_ngonCai_dot3=0;
 GLint angle_ngonTro_dot1=0,angle_ngonTro_dot2=0,angle_ngonTro_dot3=0;
 GLint angle_ngonGiua_dot1=0,angle_ngonGiua_dot2=0,angle_ngonGiua_dot3=0;
 GLint angle_ngonAput_dot1=0,angle_ngonAput_dot2=0, angle_ngonAput_dot3=0;
@@ -79,14 +73,14 @@ GLint angle_tocdonambantay = 6;
 /////////////////////////////////////////////////////////////////////////
 
 /*-----------------------------------------------------
-Cac bien luu display list Canh tay, Khuyu tay, Ban tay
+Khai bao bien luu display list Canh tay, Khuyu tay, Ban tay
 ------------------------------------------------------*/
 GLuint ban_tay,canh_tay,khuyu_tay;
 GLuint co_tay,cuitro;
 /////////////////////////////////////////////////////////////////////////
 
 /*-----------------------------------------
-Cac bien luu display list cac dot ngon tay
+Khai bao bien luu display list cac dot ngon tay
 ------------------------------------------*/
 GLuint ngonCai1,ngonTro1,ngonGiua1,ngonAput1,ngonUt1;
 GLuint daungonGiua;
@@ -100,6 +94,7 @@ void vetay();
 void nambantay();
 void nambantay1();
 
+void mua();
 void mobantay();
 void vaytay();
 void nguacotay();
@@ -107,9 +102,14 @@ void gapcotay();
 void ratruong();
 void gaptay();
 void duoitay();
-
+void tym();
+//su kien camera
 void thaydoiLookAt();
-//cac su kien mac dinh
+void dichuyencamerasangtrai();
+void dichuyencamerasangphai();
+void dichuyencameraxuongduoi();
+void dichuyencameralentren();
+//cac ham mac dinh
 void init(void);
 void display(void);
 void reshape(int w, int h);
@@ -125,6 +125,7 @@ void mouseclick(int type,int state,int x,int y);
 void veheTrucToaDo();
 void setlightingcolor(float* mangmau);
 void refresh();
+void vetungbophan();
 //////////////////////////////////////////////////////////////////////////
 int main(int argc, char** argv)
 {
@@ -133,12 +134,13 @@ glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 glutInitWindowSize (500,500);
 glutInitWindowPosition (100, 100);
 glutCreateWindow (argv[0]);
-loadtexture("index.bmp");
+loadtexture(addres_texture_file);
 init ();
 glutDisplayFunc(display);
+//glutDisplayFunc(vetungbophan);
 glutReshapeFunc(reshape);
 glutMouseFunc(mouseclick);
-glutMotionFunc(mousemove);
+
 glutKeyboardFunc(keyboard);
 glutSpecialFunc(onSpecialKeyDown);
 glutSpecialUpFunc(onSpecialKeyUp);
@@ -167,11 +169,12 @@ void init(void)
    ngonAput1 = BasicCad::MakeBox(0.16,0.35,0.16);
 	ngonUt1 = BasicCad::MakeBox(0.14,0.27,0.14);
    daungonGiua =BasicCad::MakeShpere(0.1);
-	glClearColor(0,0,0,0);
+	glClearColor(1,1,1,1);
 	glShadeModel (GL_SMOOTH);  //Tao do tron de chieu sang 
 
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+   
    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); 
    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
@@ -182,6 +185,7 @@ void init(void)
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_DEPTH_TEST);
 }
+
 
 void display(void)
 {
@@ -198,63 +202,22 @@ gluLookAt (eyex,eyey,eyez,centerx,centery,centerz,upx,upy,upz);
 	He truc toa do Oxyz
 --------------------------*/
 //veheTrucToaDo();
-GLfloat light_diffuse[] = {1,1,0.4};
-glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
 
-vetay();
-glTranslatef(-2,0,0);
-vetay();
-glTranslatef(4,0,0);
-//glPushMatrix();
-//glScalef(1,3,1);
-//glutSolidSphere(1,60,60);
-//glPopMatrix();
-
-/*
-for(int i =0;i<10;i+=2)
-{
-	if(i==0)
-		vetay();
-	else
-	{
-		glPushMatrix();
-			glTranslatef(i,0,0);
-			vetay();
-		glPopMatrix();
-		glPushMatrix();
-			glTranslatef(-i,0,0);
-			vetay();
-		glPopMatrix();
-		glPushMatrix();
-			glTranslatef(0,0,i);
-			vetay();
-		glPopMatrix();
-		glPushMatrix();
-			glTranslatef(0,0,-i);
-			vetay();
-		glPopMatrix();
-		glPushMatrix();
-			glTranslatef(i,0,i);
-			vetay();
-		glPopMatrix();
-		
-		glPushMatrix();
-			glTranslatef(i,0,-i);
-			vetay();
-		glPopMatrix();
-		
-		glPushMatrix();
-			glTranslatef(-i,0,i);
-			vetay();
-		glPopMatrix();
-		
-		glPushMatrix();
-			glTranslatef(-i,0,-i);
-			vetay();
-		glPopMatrix();
-	}
-}
+GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat mat_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
+GLfloat mat_ambient_color[] = { 0.8, 0.8, 0.2, 1.0 };
+GLfloat mat_diffuse[] = { 0.1, 0.5, 0.8, 1.0 };
+GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat no_shininess[] = { 0.0 };
+GLfloat low_shininess[] = { 5.0 };
+GLfloat high_shininess[] = { 100.0 };
+GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+/* draw sphere in first row, first column
+* diffuse reflection only; no ambient or specular
 */
+//veheTrucToaDo();
+vetay();
 if(dichuyentamnhin)
 {
 	eyex+=0.1;
@@ -263,22 +226,16 @@ if(dichuyentamnhin)
 		eyey+=0.1;
 		eyez+=0.2;
 	}
-//	glutPostRedisplay();
 	if(eyex>=8)
 	{
 		eyez-=0.2;
 		khuyu_tay_angle=0;
 		ban_tay_angle_y=0;
-		//khoidau=false;
 		if(eyez<0)
 		{
 			dichuyentamnhin = false;
-			//vaytay1=false;
-			//glutIdleFunc(NULL);
-		//	khuyu_tay_angle=0;
 			khoidau=false;
-		}
-		
+		}	
 	}
 }
 if(khoidau)
@@ -290,13 +247,16 @@ if(khoidau)
 else glutIdleFunc(NULL);
 glFlush ();
 }
+
+GLfloat khungnhin = 1.5;
 void reshape (int w, int h)
 {
 glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 glMatrixMode (GL_PROJECTION);
 glLoadIdentity ();
-glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);
-//glFrustum(-3,3,-3,3,1,20);
+
+glFrustum (-khungnhin, khungnhin, -khungnhin, khungnhin, 5, 50.0);
+
 glMatrixMode (GL_MODELVIEW);
 }
 
@@ -305,9 +265,6 @@ glMatrixMode (GL_MODELVIEW);
 ----------------------------------------------*/
 void ratruong()
 {
-	eyex=10;eyey=0;eyez=0;
-			centerx=0;centery=3;centerz=0;
-			upx=0;upx=0;upz=-5;
 			//scalef_ratruong++;
 			//coratruong=true;
 			if(ban_tay_angle>-80)
@@ -381,67 +338,6 @@ void vaytay()
 		}
 	}
 }
-void nambantay()
-{
-			angle_ngonCai_dot1+=angle_tocdonambantay;
-			angle_ngonTro_dot1+=angle_tocdonambantay;
-			angle_ngonGiua_dot1+=angle_tocdonambantay;
-			angle_ngonAput_dot1+=angle_tocdonambantay;
-			angle_ngonUt_dot1+=angle_tocdonambantay;
-			if(angle_ngonUt_dot1>85)
-			{
-				angle_ngonUt_dot1=85;
-				angle_ngonUt_dot2+=angle_tocdonambantay;
-				if(angle_ngonUt_dot2>80)
-				{
-					angle_ngonUt_dot2=80;
-					angle_ngonUt_dot3+=angle_tocdonambantay;
-					if(angle_ngonUt_dot3>65)
-						angle_ngonUt_dot3=65;
-				}
-			}
-			if(angle_ngonAput_dot1>85)
-			{
-				angle_ngonAput_dot1=85;
-				angle_ngonAput_dot2+=angle_tocdonambantay;
-				if(angle_ngonAput_dot2>80)
-				{
-					angle_ngonAput_dot2=80;
-					angle_ngonAput_dot3+=angle_tocdonambantay;
-					if(angle_ngonAput_dot3>65)
-						angle_ngonAput_dot3=65;
-				}
-			}
-			if(angle_ngonTro_dot1>85)
-			{
-				angle_ngonTro_dot1=85;
-				angle_ngonTro_dot2+=angle_tocdonambantay;
-				if(angle_ngonTro_dot2>80)
-				{
-					angle_ngonTro_dot2=80;
-					angle_ngonTro_dot3+=angle_tocdonambantay;
-					if(angle_ngonTro_dot3>65)
-						angle_ngonTro_dot3=65;
-				}
-			}
-			if(angle_ngonGiua_dot1>85)
-			{
-				angle_ngonGiua_dot1=85;
-				angle_ngonGiua_dot2+=angle_tocdonambantay;
-				if(angle_ngonGiua_dot2>80)
-				{
-					angle_ngonGiua_dot2=80;
-					
-					angle_ngonGiua_dot3+=angle_tocdonambantay;
-					if(angle_ngonGiua_dot3>65)
-						angle_ngonGiua_dot3=65;
-				}	
-			}		
-			if(angle_ngonCai_dot1>170)
-				angle_ngonCai_dot1=170;
-
-}
-
 void nambantay1()
 {
 			angle_ngonCai_dot1+=angle_tocdonambantay;
@@ -502,6 +398,42 @@ void nambantay1()
 				angle_ngonCai_dot1=170;
 
 }
+
+void nambantayHi()
+{
+			angle_ngonCai_dot1+=angle_tocdonambantay-3;
+			angle_ngonAput_dot3+=angle_tocdonambantay;
+			angle_ngonUt_dot3+=angle_tocdonambantay;
+			if(angle_ngonUt_dot3>65)
+			{
+				angle_ngonUt_dot3=65;
+				angle_ngonUt_dot2+=angle_tocdonambantay;
+				if(angle_ngonUt_dot2>80)
+				{
+					angle_ngonUt_dot2=80;
+					angle_ngonUt_dot1+=angle_tocdonambantay;
+					if(angle_ngonUt_dot1>85)
+						angle_ngonUt_dot1=85;
+				}
+			}
+			if(angle_ngonAput_dot3>65)
+			{
+				angle_ngonAput_dot3=65;
+				angle_ngonAput_dot2+=angle_tocdonambantay;
+				if(angle_ngonAput_dot2>80)
+				{
+					angle_ngonAput_dot2=80;
+					angle_ngonAput_dot1+=angle_tocdonambantay;
+					if(angle_ngonAput_dot1>85)
+						angle_ngonAput_dot1=85;
+				}
+			}
+			
+			if(angle_ngonCai_dot1>110)
+				angle_ngonCai_dot1=110;
+
+}
+
 void mobantay()
 {
 			angle_ngonCai_dot1-=angle_tocdonambantay;
@@ -596,12 +528,11 @@ void thaydoiLookAt()
 void vetay()
 {
 setlightingcolor(light_diffuse);
-
 glPushMatrix();
 	/*-------------------------
 		Khu vu Khuyu Tay
 	--------------------------*/
-	glRotatef(khuyu_tay_angle,0,0,1);
+	glRotatef(khuyu_tay_angle,0,1,0);
 	glTranslatef(0,chieudai_khuyutay/2,0);
 	//glScalef(1,2,1);
 	glCallList(khuyu_tay);
@@ -609,15 +540,6 @@ glPushMatrix();
 		Khu vuc Canh Tay
 	--------------------------*/
 	glPushMatrix();
-		/*
-		glPushMatrix();
-			glDisable(GL_LIGHTING);
-			glColor3f(1,0,0);
-			glTranslatef(0,0.1,0);
-			glCallList(vungdemCanhTay_KhuyuTay);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
-		*/
 		glTranslatef(0,chieudai_khuyutay/2-0.1,0);
 		/*-------------------------
 					Phan Cui tro
@@ -631,7 +553,6 @@ glPushMatrix();
 		glRotatef(canh_tay_angle,1,0,0);
 		glTranslatef(0,chieudai_canhtay/2,0);
 		glCallList(canh_tay);
-		
 		/*---------------------------------
 			Khu vuc Ban tay
 		---------------------------------*/
@@ -667,12 +588,10 @@ glPushMatrix();
 					setlightingcolor(light_diffuse);
 				glPopMatrix();
 			}
-			
 			/*----------------
 			Ngon tay Cai
 			-----------------*/
-			glPushMatrix();
-				
+			glPushMatrix();	
 				glTranslatef(0.25,-0.1,0);
 				glRotatef(-45,0,0,1);
 				//veheTrucToaDo();
@@ -689,11 +608,23 @@ glPushMatrix();
 				glPushMatrix();
 					glTranslatef(0,0.18,0);
 					glRotatef(-angle_ngonCai_dot2,1,0,0); // xoay dot tay thu 2
+					
+					glScalef(1,0.6,1);
 					glTranslatef(0,0.19,0);
 					glCallList(ngonCai1);
+					
+				/****************************
+					Ngon cai dot 3
+				***************************/
+					glPushMatrix();
+						glTranslatef(0,0.1,0);
+						glRotatef(angle_ngonCai_dot3,1,0,0);
+						glTranslatef(0,0.18,0);
+						glCallList(ngonCai1);
+						
+					glPopMatrix();				
 				glPopMatrix();
 			glPopMatrix();
-			
 			/*----------------
 			Ngon tay Tro
 			-----------------*/
@@ -705,9 +636,7 @@ glPushMatrix();
 				glRotatef(angle_ngonTro_dot1,1,0,0);
 				glTranslatef(0,chieudai_bantay/4-0.1,0);
 				glRotatef(-20,0,0,1);
-				//veheTrucToaDo();
 				glCallList(ngonTro1);
-
 				glPushMatrix();
 				/*--------------------------
 					Ngon tro dot 2
@@ -722,8 +651,6 @@ glPushMatrix();
 					glPushMatrix();
 						glTranslatef(0,0.15,0);
 						glRotatef(angle_ngonTro_dot3,1,0,0);
-						//glScalef(1,1.5,1);
-						//glCallList(daungonGiua);
 						glTranslatef(0,0.15,0);
 						glCallList(ngonTro1);
 						
@@ -735,16 +662,13 @@ glPushMatrix();
 			Ngon tay Giua
 			-----------------*/
 			glPushMatrix();
-			
 				/*--------------------------------
 					Ngon giua dot 1
 				---------------------------------*/
 				glTranslatef(0.1,chieudai_bantay/4,0);
 				glRotatef(angle_ngonGiua_dot1,1,0,0);
 				glTranslatef(0,chieudai_bantay/4,0);
-//				veheTrucToaDo();
 				glCallList(ngonGiua1);
-				
 				glPushMatrix();
 				/*--------------------------------
 					Ngon giua dot 2
@@ -753,7 +677,6 @@ glPushMatrix();
 					glRotatef(angle_ngonGiua_dot2,1,0,0);
 					glTranslatef(0,0.15,0);
 					glCallList(ngonGiua1);
-				
 				/*--------------------------------
 					Ngon giua dot 3
 				---------------------------------*/
@@ -762,41 +685,31 @@ glPushMatrix();
 						glRotatef(angle_ngonGiua_dot3,1,0,0);
 						glTranslatef(0,0.15,0);
 						glCallList(ngonGiua1);
-						
-						//glScalef(1,1.5,1);
-						//glCallList(daungonGiua);
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
-			
 			/*----------------
 			Ngon tay Ap ut
 			-----------------*/
 			glPushMatrix();
-			
 				glTranslatef(-0.1,chieudai_bantay/4,0);
 				glRotatef(angle_ngonAput_dot1,1,00,0);
 				glTranslatef(0,chieudai_bantay/4,0);
 				glRotatef(10,0,0,1);
 				glCallList(ngonAput1);
-				
 				glPushMatrix();
 					glTranslatef(0,0.15,0);
 					glRotatef(angle_ngonAput_dot2,1,0,0);
 					glTranslatef(0,0.15,0);
 					glCallList(ngonAput1);
-				
 					glPushMatrix();
 						glTranslatef(0,0.15,0);
 						glRotatef(angle_ngonAput_dot3,1,0,0);
-						//glScalef(1,1.5,1);
-						//glCallList(daungonGiua);
 						glTranslatef(0,0.15,0);
 						glCallList(ngonAput1);
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
-			
 			/*----------------
 			Ngon tay ut
 			-----------------*/
@@ -806,19 +719,14 @@ glPushMatrix();
 				glTranslatef(0,chieudai_bantay/4,0);
 				glRotatef(25,0,0,1);
 				glCallList(ngonUt1);
-				
 				glPushMatrix();
-				
 					glTranslatef(0,0.15,0);
 					glRotatef(angle_ngonUt_dot2,1,0,0);
 					glTranslatef(0,0.05,0);
 					glCallList(ngonUt1);
 					glPushMatrix();
 						glTranslatef(0,0.10,0);
-						glRotatef(angle_ngonUt_dot3,1,0,0);
-						//glScalef(1,1.5,1);
-						//glCallList(daungonGiua);
-						
+						glRotatef(angle_ngonUt_dot3,1,0,0);		
 						glTranslatef(0,0.1,0);
 						glCallList(ngonUt1);
 					glPopMatrix();
@@ -827,297 +735,105 @@ glPushMatrix();
 			glEnable(GL_LIGHTING);
 		glPopMatrix();
 	glPopMatrix();
-	
 glPopMatrix();
-
 }
-
-void vetay_ngontaytron()
-{
-//veheTrucToaDo();
-glPushMatrix();
-	/*-------------------------
-		Khu vu Khuyu Tay
-	--------------------------*/
-	glRotatef(khuyu_tay_angle,0,0,1);
-	glTranslatef(0,chieudai_khuyutay/2,0);
-	//glScalef(1,2,1);
-	glCallList(khuyu_tay);
-	/*--------------------------
-		Khu vuc Canh Tay
-	--------------------------*/
-	glPushMatrix();
-		/*
-		glPushMatrix();
-			glDisable(GL_LIGHTING);
-			glColor3f(1,0,0);
-			glTranslatef(0,0.1,0);
-			glCallList(vungdemCanhTay_KhuyuTay);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
-		*/
-		glTranslatef(0,chieudai_khuyutay/2-0.1,0);
-		/*-------------------------
-					Phan Cui tro
-			-------------------------*/
-			glPushMatrix();
-				glTranslatef(0,0,-0.07);
-				glScalef(1,1.2,1.1);
-				glCallList(cuitro);
-			glPopMatrix();
-			
-		glRotatef(canh_tay_angle,1,0,0);
-		glTranslatef(0,chieudai_canhtay/2,0);
-		glCallList(canh_tay);
-		
-		/*---------------------------------
-			Khu vuc Ban tay
-		---------------------------------*/
-		glPushMatrix();
-			//glDisable(GL_LIGHTING);
-			//glColor3f(0.1,0.5,0.1);
-			glTranslatef(0,chieudai_canhtay/2,0);
-			/*---------------------------------
-				Phan co tay
-			---------------------------------*/
-			glPushMatrix();
-				glColor3f(1,0,0);
-				glScalef(1,0.5,1);
-				glCallList(co_tay);			
-			glPopMatrix();
-			//glTranslatef(0,0,-0.25); Xoay theo truc Z thi can
-			glRotatef(ban_tay_angle_y,0,1,0);			
-			//glTranslatef(0,0,0.25);
-			glTranslatef(0,chieudai_bantay/2,0); 
-		//	glColor3f(0.1,0.5,0.1);	
-			glColor3f(0.4,0.4,0.4);
-//			veheTrucToaDo();
-			glCallList(ban_tay);
-//			glPushMatrix();
-			//	glScalef(1,1,4.0);
-//				glutSolidCube(12);
-//			glPopMatrix();
-			/*----------------
-			Ngon tay Cai
-			-----------------*/
-			glPushMatrix();
-				
-				glTranslatef(0.25,-0.1,0);
-				glRotatef(-45,0,0,1);
-				//veheTrucToaDo();
-				/*--------------------------
-					Ngon Cai dot 1
-				---------------------------*/
-					glTranslatef(0,-0.1,0);
-					glRotatef(-angle_ngonCai_dot1,-1,1,0); //Xoay ca ngon tay cai
-					glTranslatef(0,0.1,0);
-				glCallList(ngonCai1);
-				/*---------------------------
-					Ngon cai dot 2
-				---------------------------*/
-				glPushMatrix();
-					glTranslatef(0,0.18,0);
-					glRotatef(-angle_ngonCai_dot2,1,0,0); // xoay dot tay thu 2
-					glTranslatef(0,0.19,0);
-					glCallList(ngonCai1);
-				glPopMatrix();
-			glPopMatrix();
-			
-			/*----------------
-			Ngon tay Tro
-			-----------------*/
-			glPushMatrix();
-				glTranslatef(0.25,chieudai_bantay/4,0);
-				/*--------------------------
-					Ngon tro dot 1
-				---------------------------*/
-				glRotatef(angle_ngonTro_dot1,1,0,0);
-				glTranslatef(0,chieudai_bantay/4-0.1,0);
-				glRotatef(-20,0,0,1);
-				//veheTrucToaDo();
-				glCallList(ngonTro1);
-
-				glPushMatrix();
-				/*--------------------------
-					Ngon tro dot 2
-				---------------------------*/
-					glTranslatef(0,0.15,0);
-					glRotatef(angle_ngonTro_dot2,1,0,0);
-					glTranslatef(0,0.15,0);
-					glCallList(ngonTro1);
-				/*--------------------------
-					Ngon tro dot 3
-				---------------------------*/					
-					glPushMatrix();
-						glTranslatef(0,0.15,0);
-						glRotatef(angle_ngonTro_dot3,1,0,0);
-						glScalef(1,1.5,1);
-						glCallList(daungonGiua);
-						//glTranslatef(0,0.15,0);
-						//glCallList(ngonTro1);
-						
-					glPopMatrix();
-				glPopMatrix();
-			glPopMatrix();
-			
-			/*----------------
-			Ngon tay Giua
-			-----------------*/
-			glPushMatrix();
-			
-				/*--------------------------------
-					Ngon giua dot 1
-				---------------------------------*/
-				glTranslatef(0.1,chieudai_bantay/4,0);
-				glRotatef(angle_ngonGiua_dot1,1,0,0);
-				glTranslatef(0,chieudai_bantay/4,0);
-//				veheTrucToaDo();
-				glCallList(ngonGiua1);
-				
-				glPushMatrix();
-				/*--------------------------------
-					Ngon giua dot 2
-				---------------------------------*/
-					glTranslatef(0,0.15,0);
-					glRotatef(angle_ngonGiua_dot2,1,0,0);
-					glTranslatef(0,0.15,0);
-					glCallList(ngonGiua1);
-				
-				/*--------------------------------
-					Ngon giua dot 3
-				---------------------------------*/
-					glPushMatrix();
-						glTranslatef(0,0.15,0);
-						glRotatef(angle_ngonGiua_dot3,1,0,0);
-						//glTranslatef(0,0.15,0);
-						//glCallList(ngonGiua1);
-						//glTranslatef(0,0.15,0);
-						glScalef(1,1.5,1);
-						glCallList(daungonGiua);
-					glPopMatrix();
-				glPopMatrix();
-			glPopMatrix();
-			
-			/*----------------
-			Ngon tay Ap ut
-			-----------------*/
-			glPushMatrix();
-			
-				glTranslatef(-0.1,chieudai_bantay/4,0);
-				glRotatef(angle_ngonAput_dot1,1,00,0);
-				glTranslatef(0,chieudai_bantay/4,0);
-				glRotatef(10,0,0,1);
-				glCallList(ngonAput1);
-				
-				glPushMatrix();
-					glTranslatef(0,0.15,0);
-					glRotatef(angle_ngonAput_dot2,1,0,0);
-					glTranslatef(0,0.15,0);
-					glCallList(ngonAput1);
-				
-					glPushMatrix();
-						glTranslatef(0,0.15,0);
-						glRotatef(angle_ngonAput_dot3,1,0,0);
-						glScalef(1,1.5,1);
-						glCallList(daungonGiua);
-						//glTranslatef(0,0.15,0);
-						//glCallList(ngonAput1);
-					glPopMatrix();
-				glPopMatrix();
-			glPopMatrix();
-			
-			/*----------------
-			Ngon tay ut
-			-----------------*/
-			glPushMatrix();
-				glTranslatef(-0.25,chieudai_bantay/4,0);
-				glRotatef(angle_ngonUt_dot1,1,0,0);
-				glTranslatef(0,chieudai_bantay/4,0);
-				glRotatef(25,0,0,1);
-				glCallList(ngonUt1);
-				
-				glPushMatrix();
-				
-					glTranslatef(0,0.15,0);
-					glRotatef(angle_ngonUt_dot2,1,0,0);
-					glTranslatef(0,0.05,0);
-					glCallList(ngonUt1);
-					glPushMatrix();
-						glTranslatef(0,0.10,0);
-						glRotatef(angle_ngonUt_dot3,1,0,0);
-						glScalef(1,1.5,1);
-						glCallList(daungonGiua);
-						
-						//glTranslatef(0,0.1,0);
-						//glCallList(ngonUt1);
-					glPopMatrix();
-				glPopMatrix();
-			glPopMatrix();
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
-	glPopMatrix();
-	
-glPopMatrix();
-
-}
-
-
 /**********************************
 	Cac ham bat su kien nhan phim
 **********************************/
 void mouseclick(int type,int state,int x,int y)
 {
-	if(type ==GLUT_LEFT_BUTTON)
+	switch(type)
+	{
+	case GLUT_LEFT_BUTTON:
 	{
 		if(state==GLUT_DOWN)
 		{
-			mouse_clicked=true;
-			x_now = x;
-			Dis_cam_to_Oy=sqrt(eyex*eyex+eyez*eyez);
-		}
-		else
-		{
-			mouse_clicked =false;
-			angle_camera+=delta_camera;
-			x_now = -1;
+			if(eyex>0)
+			{
+				if(eyez>=0)
+				{
+					//eyex--;
+					eyez--;
+				}
+				else if(eyez<=0)
+				{
+					eyez++;
+				}
+				eyex--;
+			}
+			else if(eyex=0)
+			{
+				if(eyez>0)
+					eyez--;
+				else if(eyez<0)
+				{
+					eyez++;	
+				}
+			}
+			else if(eyex<0)
+			{
+				if(eyez>=0)
+				{
+					eyez--;
+				}
+				
+				else if(eyez<=0)
+				{
+					eyez++;
+				}
+				eyex++;
+			}
 		}
 	}
-	else if(type==GLUT_RIGHT_BUTTON)
+		break;
+	case GLUT_RIGHT_BUTTON :
 	{
 		if(state==GLUT_DOWN)
 		{
-			mouseRight_clicked=true;
-			y_now = y;
-			Dis_cam_to_Oz=sqrt(eyex*eyex+eyey*eyey);
-		}
-		else
-		{
-			mouseRight_clicked=false;
-			angle_camera1+=delta_camera1;
-			y_now = -1;
+			if(eyex>0)
+			{
+				if(eyez>0)
+				{
+					eyex++;
+					eyez++;
+				}
+				else if(eyez<0)
+				{
+					eyez--;
+				}
+				eyex++;
+			}
+			else if(eyex=0)
+			{
+				if(eyez>=0)
+					eyez++;
+				else if(eyez<0)
+				{
+					eyez--;	
+				}
+			}
+			else if(eyex<0)
+			{
+				if(eyez>0)
+				{
+					eyez++;
+				}
+				
+				else if(eyez<0)
+				{
+					eyez--;
+				}
+				eyex--;
+			}
 		}
 	}
+		break;
+	default :
+		break;
+	}
+	glutPostRedisplay();
 	
 }
-
-void mousemove(int x,int y)
-{
-	if(mouse_clicked)
-	{
-		delta_camera = (x-x_now)*0.02f;
-		eyex = Dis_cam_to_Oy*sin(angle_camera-delta_camera);
-		eyez = Dis_cam_to_Oy*cos(angle_camera-delta_camera);
-		glutPostRedisplay();
-	}
-	else if (mouseRight_clicked)
-	{
-		delta_camera1 = (y - y_now)*0.02;
-		eyex = Dis_cam_to_Oz*sin(angle_camera1-delta_camera1);
-		eyey =Dis_cam_to_Oz*cos(angle_camera1-delta_camera1);
-		glutPostRedisplay();
-	}
-}
-
 void keyboardUp(unsigned char key,int a,int b)
 {
 	switch(key)
@@ -1134,6 +850,11 @@ void keyboardUp(unsigned char key,int a,int b)
 void keyboard (unsigned char key, int a, int b)
 {
 	switch (key) {
+		case 'l':
+		mua();
+		glutPostRedisplay();
+		break;
+		
 		case 't':
 		xoaycotay();
 		glutPostRedisplay();
@@ -1144,19 +865,6 @@ void keyboard (unsigned char key, int a, int b)
 		break;
 		case 'V':
 		khuyu_tay_angle-=3;
-		glutPostRedisplay();
-		break;
-
-		case 'b':
-		eyex=0;	
-		eyey = -5;
-		eyez=0;
-		centerx=0;
-		centery=0;
-		centerz=0;
-		upx=1;
-		upy=0;
-		upz=0;
 		glutPostRedisplay();
 		break;
 		case 'x':
@@ -1171,8 +879,16 @@ void keyboard (unsigned char key, int a, int b)
 			nambantay1();
 			glutPostRedisplay();
 			break;
+		case 'h' :
+			nambantayHi();
+			glutPostRedisplay();
+			break;
 		case 'm' :
 			mobantay();
+			glutPostRedisplay();
+			break;
+		case 'q' :
+			tym();
 			glutPostRedisplay();
 			break;
 		case 'r' :
@@ -1190,6 +906,9 @@ void onSpecialKeyUp(int key,int x,int y)
 			coratruong=false;
 			scalef_ratruong=1;
 			glutPostRedisplay();
+			break;
+		case GLUT_KEY_UP :
+			
 			break;
 		default :
 			break;
@@ -1209,11 +928,14 @@ void onSpecialKeyDown(int key, int x,int y)
 			glutPostRedisplay();
 			break;
 		case GLUT_KEY_F3 :
+			/*
 			eyex=10;eyey=0;eyez=0;
 			centerx=0;centery=3;centerz=0;
 			upx=0;upx=0;upz=-5;
 			//scalef_ratruong++;
 			//coratruong=true;
+			*/
+			eyex+=0.2;
 			if(ban_tay_angle>-80)
 			{
 				nguacotay();
@@ -1234,19 +956,19 @@ void onSpecialKeyDown(int key, int x,int y)
 			glutPostRedisplay();
 			break;
 		case GLUT_KEY_UP :
-			eyez -=0.2;
+			dichuyencameralentren();
 			glutPostRedisplay();
 			break;
 		case GLUT_KEY_DOWN :
-			eyez+=0.2;
+			dichuyencameraxuongduoi();
 			glutPostRedisplay();
 			break;
 		case GLUT_KEY_LEFT :
-			eyex-=0.2;
+			dichuyencamerasangtrai();
 			glutPostRedisplay();
 			break;
 		case GLUT_KEY_RIGHT :
-			eyex+=0.2;
+			dichuyencamerasangphai();
 			glutPostRedisplay();
 			break;
 		default:
@@ -1301,7 +1023,7 @@ void loadtexture(const char* filename)
 {
 	BmpLoader bl(filename);
 	glGenTextures(1,&khuyu_tay);
-	glBindTexture(GL_TEXTURE_2D,ban_tay);
+	glBindTexture(GL_TEXTURE_2D,khuyu_tay);
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
@@ -1309,3 +1031,234 @@ void loadtexture(const char* filename)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 	gluBuild2DMipmaps(GL_TEXTURE_2D,GL_RGB,bl.Width,bl.Height,GL_RGB,GL_UNSIGNED_BYTE,bl.textureData);
 }
+
+void loadtexture(const char* filename,GLuint destination)
+{
+	BmpLoader bl(filename);
+	glGenTextures(1,&destination);
+	glBindTexture(GL_TEXTURE_2D,destination);
+	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+	gluBuild2DMipmaps(GL_TEXTURE_2D,GL_RGB,bl.Width,bl.Height,GL_RGB,GL_UNSIGNED_BYTE,bl.textureData);
+}
+void tym()
+{
+	    	angle_ngonGiua_dot3+=angle_tocdonambantay;
+			angle_ngonAput_dot3+=angle_tocdonambantay;
+			angle_ngonUt_dot3+=angle_tocdonambantay;
+			//angle_ngonCai_dot2+=angle_tocdonambantay;
+			angle_ngonTro_dot1+=angle_tocdonambantay;
+			if(angle_ngonUt_dot3>65)
+			{
+				angle_ngonUt_dot3=65;
+				angle_ngonUt_dot2+=angle_tocdonambantay;
+				if(angle_ngonUt_dot2>80)
+				{
+					angle_ngonUt_dot2=80;
+					angle_ngonUt_dot1+=angle_tocdonambantay;
+					if(angle_ngonUt_dot1>85)
+						angle_ngonUt_dot1=85;
+				}
+			}
+			if(angle_ngonAput_dot3>65)
+			{
+				angle_ngonAput_dot3=65;
+				angle_ngonAput_dot2+=angle_tocdonambantay;
+				if(angle_ngonAput_dot2>80)
+				{
+					angle_ngonAput_dot2=80;
+					angle_ngonAput_dot1+=angle_tocdonambantay;
+					if(angle_ngonAput_dot1>85)
+						angle_ngonAput_dot1=85;
+				}
+			}
+			if(angle_ngonGiua_dot3>65)
+			{
+				angle_ngonGiua_dot3=65;
+				angle_ngonGiua_dot2+=angle_tocdonambantay;
+				if(angle_ngonGiua_dot2>80)
+				{
+					angle_ngonGiua_dot2=80;
+					angle_ngonGiua_dot1+=angle_tocdonambantay;
+					if(angle_ngonGiua_dot1>85)
+					{
+						angle_ngonGiua_dot1=85;
+					}
+				}
+			}
+			if(angle_ngonTro_dot1>45)
+			{
+				angle_ngonTro_dot1=45;
+				angle_ngonTro_dot2+=angle_tocdonambantay;
+				if(angle_ngonTro_dot2>70)
+				     {
+					 angle_ngonTro_dot2=70;
+					 angle_ngonTro_dot3+=6;
+					 if(angle_ngonTro_dot3>20)
+					 angle_ngonTro_dot3=20;
+					 }
+				
+			}
+			angle_ngonCai_dot1+=3;
+			if(angle_ngonCai_dot1>40)
+			{
+				angle_ngonCai_dot1=40;
+				//angle_ngonCai_dot3+=6;
+				if(angle_ngonCai_dot3>30)
+					angle_ngonCai_dot3=30;
+			}
+}
+void dichuyencamerasangphai()
+{
+	Dis_cam_to_Oy=(sqrt(eyex*eyex+eyez*eyez));
+	
+//	eyex+=0.5;
+	//eyez = (sqrt(Dis_cam_to_Oy-eyex*eyex));
+//	eyez -= 0.5 ;
+	//Dis_cam_to_Oy=sqrt(eyex*eyex+eyez*eyez);
+	if(eyez>=0)
+	{
+		eyex+=0.5;
+		if(eyex>=0)
+			eyez -=0.5;
+		else eyez+=0.5;
+	}	
+	if(eyez<0)
+	{
+		eyex-=0.5;
+		if(eyex>=0)
+			eyez -=0.5 ;
+		else eyez+=0.5;
+	}
+}
+void dichuyencamerasangtrai()
+{
+
+	if(eyez>=0)
+	{
+		eyex-=0.5;
+		if(eyex>=0)
+			eyez +=0.5;
+		else eyez-=0.5;
+	}	
+	if(eyez<0)
+	{
+		eyex+=0.5;
+		if(eyex<0)
+			eyez -=0.5 ;
+		else eyez+=0.5;
+	}
+}
+void dichuyencameraxuongduoi()
+{
+	if(eyez>=0)
+	{
+		eyey-=0.5;
+		if(eyey>=0)
+		{
+			eyez+=0.5;
+		}
+		else eyez-=0.5;
+	}
+	if(eyez<0)
+	{
+		eyey+=0.5;
+		if(eyey>=0)
+			eyez-=0.5;
+		else eyez+=0.5;
+	}
+}
+void dichuyencameralentren()
+{
+	if(eyez>=0)
+	{
+		eyey+=0.5;
+		if(eyey>=0)
+		{
+			eyez-=0.5;
+		}
+		else eyez+=0.5;
+	}
+	if(eyez<0)
+	{
+		eyey-=0.5;
+		if(eyey>=0)
+			eyez+=0.5;
+		else eyez-=0.5;
+	}
+}
+int tocdoMua=6;
+bool trolai1 =false;
+bool trolai2 =false;
+bool trolai3 =false;
+bool trolai4 =false;
+
+void mua()
+{
+	if(!trolai1||!trolai2||!trolai3||!trolai4)
+	{
+		if(!trolai1)
+		{
+			angle_ngonUt_dot1+=tocdoMua;
+		}
+		
+		if(angle_ngonUt_dot1>20)
+			{
+				if(!trolai2)
+				{
+					angle_ngonAput_dot1+=tocdoMua;
+				}
+				
+				if(angle_ngonAput_dot1>20)
+				{
+					if(!trolai3)
+					{
+						angle_ngonGiua_dot1+=tocdoMua;
+					}
+					
+					if(angle_ngonGiua_dot1>20)
+					{
+						if(!trolai4)
+							angle_ngonTro_dot1+=tocdoMua;
+						else
+							trolai1=true;
+						
+					}
+				}
+			}
+	}
+	if(trolai1||trolai2||trolai3||trolai4)
+	{
+		if(trolai1)
+			angle_ngonUt_dot1-=tocdoMua;
+			if(angle_ngonUt_dot1<60)
+			{
+				if(trolai2)
+				{
+					angle_ngonAput_dot1-=tocdoMua;
+				}
+				
+				if(angle_ngonAput_dot1<60)
+				{
+					if(trolai3)
+					{
+						angle_ngonGiua_dot1-=tocdoMua;
+					}
+					
+					if(angle_ngonGiua_dot1<60)
+					{
+						if(trolai4)
+							angle_ngonTro_dot1-=tocdoMua;
+						else
+							trolai1=false;
+						
+					}
+				}
+			}
+		
+	}
+}
+

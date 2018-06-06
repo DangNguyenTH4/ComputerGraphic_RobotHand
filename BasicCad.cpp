@@ -224,13 +224,13 @@ GLuint BasicCad::MakeFrustumShape(const float& bottom_size,const float& top_size
 	glBegin(GL_QUADS);
 	//Front
 	glNormal3f(0,0,1);
-	//glTexCoord2f(0,0);
+	glTexCoord2f(0,0);
 	glVertex3f(-bot,-halfHeight,bot);
-	//glTexCoord2f(1,0);
+	glTexCoord2f(1,0);
 	glVertex3f(bot,-halfHeight,bot);
-	//glTexCoord2f(1,1);
+	glTexCoord2f(1,1);
 	glVertex3f(top,halfHeight,top);
-	//glTexCoord2f(0,1);
+	glTexCoord2f(0,1);
 	glVertex3f(-top,halfHeight,top);
 	//Left
 	glNormal3f(-1,0,0);
