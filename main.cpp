@@ -26,7 +26,7 @@ bool mouseRight_clicked = false;
 	Khai bao bien Phan texture
 **********************************/
 GLuint texture;
-char addres_texture_file[20]="dragon.bmp";
+char addres_texture_file[20]="index.bmp";
 void loadtexture(const char* filename);
 void loadtexture(const char* filename,GLuint destination);
 
@@ -38,11 +38,12 @@ void loadtexture(const char* filename,GLuint destination);
 	Khai bao bien Kiem soat anh sang
 ---------------------------------------------*/
 GLfloat mat_specular[] ={1,1,1,1};
-GLfloat mat_shininess[] = {10000};
-GLfloat light_position[] = {0,4,4,0};
+GLfloat mat_shininess[] = {1000};
+GLfloat light_position[] = {0,0,1,0};
 GLfloat light_specular[] = {1,1,1,1}; // dinh nghia mau cua noi co cuong do manh nhat
-GLfloat light_diffuse[] = {1,1,1,1}; //Mau xxung quanh
-GLfloat light_ambient[] = {1,1,1,1};
+GLfloat light_diffuse[] = {1,1,0,1}; //Mau xxung quanh
+GLfloat light_ambient[] = {1,1,0,1};
+
 GLfloat light_ambient_trang[]={1,1,1,1};
 GLfloat light_diffuse_trang[]={1,1,1,1};
 GLfloat light_specular_trang[]={1,1,1,1};
@@ -169,16 +170,16 @@ void init(void)
    ngonAput1 = BasicCad::MakeBox(0.16,0.35,0.16);
 	ngonUt1 = BasicCad::MakeBox(0.14,0.27,0.14);
    daungonGiua =BasicCad::MakeShpere(0.1);
-	glClearColor(1,1,1,1);
+	glClearColor(0,0,0,0);
 	glShadeModel (GL_SMOOTH);  //Tao do tron de chieu sang 
 
    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
    
    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-   glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular); 
-   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-   glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_specular); 
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_ambient);
    
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
@@ -190,33 +191,9 @@ void init(void)
 void display(void)
 {
 glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 glColor3f (1.0, 1.0, 1.0);
-glLoadIdentity (); /* clear the matrix */
-//gluLookAt (6, 6, 6, 0.0, 1, 0.0, 0.0, 1.0, 0.0);
-//gluLookAt (0, 5, 6, 0, 3, 0.0, 0.0, 1.0, 0.0);
+glLoadIdentity (); 
 gluLookAt (eyex,eyey,eyez,centerx,centery,centerz,upx,upy,upz);
-
-
-/*--------------------------
-	He truc toa do Oxyz
---------------------------*/
-//veheTrucToaDo();
-
-GLfloat no_mat[] = { 0.0, 0.0, 0.0, 1.0 };
-GLfloat mat_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
-GLfloat mat_ambient_color[] = { 0.8, 0.8, 0.2, 1.0 };
-GLfloat mat_diffuse[] = { 0.1, 0.5, 0.8, 1.0 };
-GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat no_shininess[] = { 0.0 };
-GLfloat low_shininess[] = { 5.0 };
-GLfloat high_shininess[] = { 100.0 };
-GLfloat mat_emission[] = {0.3, 0.2, 0.2, 0.0};
-glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-/* draw sphere in first row, first column
-* diffuse reflection only; no ambient or specular
-*/
-//veheTrucToaDo();
 vetay();
 if(dichuyentamnhin)
 {
@@ -247,26 +224,20 @@ if(khoidau)
 else glutIdleFunc(NULL);
 glFlush ();
 }
-
 GLfloat khungnhin = 1.5;
 void reshape (int w, int h)
 {
 glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 glMatrixMode (GL_PROJECTION);
 glLoadIdentity ();
-
 glFrustum (-khungnhin, khungnhin, -khungnhin, khungnhin, 5, 50.0);
-
 glMatrixMode (GL_MODELVIEW);
 }
-
 /**---------------------------------------------
 	Cac ham hanh dong
 ----------------------------------------------*/
 void ratruong()
 {
-			//scalef_ratruong++;
-			//coratruong=true;
 			if(ban_tay_angle>-80)
 			{
 				nguacotay();
@@ -293,7 +264,6 @@ void duoitay()
 			if(canh_tay_angle<0)
 				canh_tay_angle=0;
 }
-
 void nguacotay()
 {
 	ban_tay_angle -=3;
@@ -315,26 +285,20 @@ void vaytay()
 {
 	if(vaytay1)
 	{
-		//khuyu_tay_angle+=3;
 		canh_tay_angle_y+=3;
 		ban_tay_angle_y+=6;
 		if(canh_tay_angle_y>25)
-		//if(khuyu_tay_angle>25)
 		{
 			vaytay1=false;
-		//	khuyu_tay_angle=25;
 		}
 	}
 	if(!vaytay1)
 	{
-		//khuyu_tay_angle-=3;
 		canh_tay_angle_y-=3;
 		ban_tay_angle_y-=6;
-		//if(khuyu_tay_angle<-25)
 		if(canh_tay_angle_y<-25)
 		{
 			vaytay1=true;
-		//	khuyu_tay_angle=-25;
 		}
 	}
 }
@@ -433,7 +397,6 @@ void nambantayHi()
 				angle_ngonCai_dot1=110;
 
 }
-
 void mobantay()
 {
 			angle_ngonCai_dot1-=angle_tocdonambantay;
@@ -515,7 +478,6 @@ void xoaycotay(void)
 			ban_tay_angle_y=-60;
 		}
 	}
-	//glutPostRediplay();
 }
 void thaydoiLookAt()
 {
@@ -527,7 +489,6 @@ void thaydoiLookAt()
 *********************************/
 void vetay()
 {
-setlightingcolor(light_diffuse);
 glPushMatrix();
 	/*-------------------------
 		Khu vu Khuyu Tay
@@ -557,31 +518,24 @@ glPushMatrix();
 			Khu vuc Ban tay
 		---------------------------------*/
 		glPushMatrix();
-			//glDisable(GL_LIGHTING);
-			//glColor3f(0.1,0.5,0.1);
 			glTranslatef(0,chieudai_canhtay/2,0);
 			/*---------------------------------
 				Phan co tay
 			---------------------------------*/
 			glPushMatrix();
-				glColor3f(1,0,0);
 				glScalef(1,0.5,1);
 				glCallList(co_tay);			
 			glPopMatrix();
 			//glTranslatef(0,0,-0.25); Xoay theo truc Z thi can
 			glRotatef(ban_tay_angle_y,0,1,0);
 			glRotatef(ban_tay_angle,1,0,0);			
-			//glTranslatef(0,0,0.25);
 			glTranslatef(0,chieudai_bantay/2,0); 
-		//	glColor3f(0.1,0.5,0.1);	
-			glColor3f(0.4,0.4,0.4);
 			glCallList(ban_tay);
 			if(coratruong)
 			{
 				glPushMatrix();
-					//scalef_ratruong=5;;
-					//light_ratruong = light_ambient_trang;
 					setlightingcolor(light_ratruong);
+	
 					glTranslatef(0,0,scalef_ratruong*0.1);
 					glScalef(1,1,scalef_ratruong);
 					glCallList(ban_tay);
@@ -611,8 +565,7 @@ glPushMatrix();
 					
 					glScalef(1,0.6,1);
 					glTranslatef(0,0.19,0);
-					glCallList(ngonCai1);
-					
+					glCallList(ngonCai1);					
 				/****************************
 					Ngon cai dot 3
 				***************************/
@@ -620,8 +573,7 @@ glPushMatrix();
 						glTranslatef(0,0.1,0);
 						glRotatef(angle_ngonCai_dot3,1,0,0);
 						glTranslatef(0,0.18,0);
-						glCallList(ngonCai1);
-						
+						glCallList(ngonCai1);						
 					glPopMatrix();				
 				glPopMatrix();
 			glPopMatrix();
@@ -928,13 +880,6 @@ void onSpecialKeyDown(int key, int x,int y)
 			glutPostRedisplay();
 			break;
 		case GLUT_KEY_F3 :
-			/*
-			eyex=10;eyey=0;eyez=0;
-			centerx=0;centery=3;centerz=0;
-			upx=0;upx=0;upz=-5;
-			//scalef_ratruong++;
-			//coratruong=true;
-			*/
 			eyex+=0.2;
 			if(ban_tay_angle>-80)
 			{
@@ -996,13 +941,12 @@ glEnable(GL_LIGHTING);
 glColor3f(1,0,0);
 
 }
-
 void setlightingcolor(float* mangmau)
 {
 	
-				glLightfv(GL_LIGHT0, GL_SPECULAR, mangmau); 
-				glLightfv(GL_LIGHT0, GL_DIFFUSE, mangmau);
-   				glLightfv(GL_LIGHT0, GL_AMBIENT, mangmau);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mangmau); 
+				glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mangmau);
+   				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mangmau);
 				
 }
 void refresh()
@@ -1014,6 +958,8 @@ angle_ngonGiua_dot1=0;angle_ngonGiua_dot2=0;angle_ngonGiua_dot3=0;
 angle_ngonAput_dot1=0;angle_ngonAput_dot2=0; angle_ngonAput_dot3=0;
 angle_ngonUt_dot1=0;angle_ngonUt_dot2=0;angle_ngonUt_dot3=0;
 eyex=8,eyey=8,eyez=8,centerx=0,centery=3,centerz=0,upx=0,upy=1,upz=0;
+khoidau=false;
+dichuyentamnhin=false;
 }
 
 /**********************************
@@ -1049,7 +995,6 @@ void tym()
 	    	angle_ngonGiua_dot3+=angle_tocdonambantay;
 			angle_ngonAput_dot3+=angle_tocdonambantay;
 			angle_ngonUt_dot3+=angle_tocdonambantay;
-			//angle_ngonCai_dot2+=angle_tocdonambantay;
 			angle_ngonTro_dot1+=angle_tocdonambantay;
 			if(angle_ngonUt_dot3>65)
 			{
@@ -1106,7 +1051,6 @@ void tym()
 			if(angle_ngonCai_dot1>40)
 			{
 				angle_ngonCai_dot1=40;
-				//angle_ngonCai_dot3+=6;
 				if(angle_ngonCai_dot3>30)
 					angle_ngonCai_dot3=30;
 			}
@@ -1115,10 +1059,6 @@ void dichuyencamerasangphai()
 {
 	Dis_cam_to_Oy=(sqrt(eyex*eyex+eyez*eyez));
 	
-//	eyex+=0.5;
-	//eyez = (sqrt(Dis_cam_to_Oy-eyex*eyex));
-//	eyez -= 0.5 ;
-	//Dis_cam_to_Oy=sqrt(eyex*eyex+eyez*eyez);
 	if(eyez>=0)
 	{
 		eyex+=0.5;
@@ -1190,7 +1130,8 @@ void dichuyencameralentren()
 		else eyez-=0.5;
 	}
 }
-int tocdoMua=6;
+int tocdoMua=10;
+int tocdoMua1=12;
 bool trolai1 =false;
 bool trolai2 =false;
 bool trolai3 =false;
@@ -1198,6 +1139,10 @@ bool trolai4 =false;
 
 void mua()
 {
+	if(angle_ngonTro_dot2<30)
+	{
+		nambantay1();
+	}
 	if(!trolai1||!trolai2||!trolai3||!trolai4)
 	{
 		if(!trolai1)
@@ -1207,6 +1152,7 @@ void mua()
 		
 		if(angle_ngonUt_dot1>20)
 			{
+				trolai2=false;
 				if(!trolai2)
 				{
 					angle_ngonAput_dot1+=tocdoMua;
@@ -1214,6 +1160,7 @@ void mua()
 				
 				if(angle_ngonAput_dot1>20)
 				{
+					trolai3=false;
 					if(!trolai3)
 					{
 						angle_ngonGiua_dot1+=tocdoMua;
@@ -1221,10 +1168,13 @@ void mua()
 					
 					if(angle_ngonGiua_dot1>20)
 					{
+						trolai4=false;
 						if(!trolai4)
+						{
 							angle_ngonTro_dot1+=tocdoMua;
-						else
-							trolai1=true;
+							if(angle_ngonTro_dot1>20)
+								trolai1=true;
+						}
 						
 					}
 				}
@@ -1232,27 +1182,44 @@ void mua()
 	}
 	if(trolai1||trolai2||trolai3||trolai4)
 	{
-		if(trolai1)
-			angle_ngonUt_dot1-=tocdoMua;
-			if(angle_ngonUt_dot1<60)
+		if(trolai1&&angle_ngonUt_dot1>0)
+		{
+			angle_ngonUt_dot1-=tocdoMua1;
+			if(angle_ngonUt_dot1<0)
+				trolai1=false;
+		}
+		
+		
+		if(angle_ngonUt_dot1<60)
 			{
-				if(trolai2)
+				trolai2=true;
+				if(trolai2&&angle_ngonAput_dot1>0)
 				{
-					angle_ngonAput_dot1-=tocdoMua;
+					angle_ngonAput_dot1-=tocdoMua1;
+					if(angle_ngonAput_dot1<0)
+						trolai2=false;
 				}
 				
 				if(angle_ngonAput_dot1<60)
 				{
-					if(trolai3)
+					trolai3=true;
+					if(trolai3&&angle_ngonGiua_dot1>0)
 					{
-						angle_ngonGiua_dot1-=tocdoMua;
+						angle_ngonGiua_dot1-=tocdoMua1;
+						if(angle_ngonGiua_dot1<0)
+							trolai3=false;
 					}
 					
 					if(angle_ngonGiua_dot1<60)
 					{
-						if(trolai4)
-							angle_ngonTro_dot1-=tocdoMua;
-						else
+						trolai4=true;
+						if(trolai4&&angle_ngonTro_dot1>0)
+						{
+							angle_ngonTro_dot1-=tocdoMua1;
+							if(angle_ngonTro_dot1<0)
+								trolai4=false;
+						}
+						if(angle_ngonTro_dot1<60)
 							trolai1=false;
 						
 					}

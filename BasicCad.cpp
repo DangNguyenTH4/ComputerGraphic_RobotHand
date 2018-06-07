@@ -136,84 +136,6 @@ GLuint BasicCad::MakeBox( const float& length, const float& height, const float&
 	glEndList();
 	return dp_list;
 }
-GLuint BasicCad::MakeCylinder(const float& radius, const float& length)
-{
-	GLuint dplist;
-	dplist = glGenLists(1);
-	glNewList(dplist,GL_COMPILE);
-	GLUquadricObj *quadratic_obj;
-	quadratic_obj = gluNewQuadric();
-	glRotatef(-90,1.0,0.0,0.0);
-	gluCylinder(quadratic_obj,radius,radius,length,32,32);
-	glEndList();
-	return dplist;
-}
-GLuint BasicCad::MakeTruncatedCone(const float& base_rad,const float& top_rad,const float& length)
-{
-	GLuint dplist;
-	dplist = glGenLists(1);
-	glNewList(dplist,GL_COMPILE);
-	GLUquadricObj *quadratic_obj;
-	quadratic_obj = gluNewQuadric();
-	glRotatef(-90,1.0,0.0,0.0);
-	gluCylinder(quadratic_obj,base_rad,top_rad,length,32,32);
-	glEndList();
-	return dplist;
-}
-GLuint BasicCad::MakeCone(const float& base_rad,const float& length)
-{
-	GLuint dplist;
-	dplist = glGenLists(1);
-	glNewList(dplist,GL_COMPILE);
-	GLUquadricObj *quadratic_obj;
-	quadratic_obj = gluNewQuadric();
-	glRotatef(-90,1.0,0.0,0.0);
-	gluCylinder(quadratic_obj,base_rad,0.0,length,32,32);
-	glEndList();
-	return dplist;	
-}
-GLuint BasicCad::MakePyramid(const float& size, const float& height)
-{
-	GLuint dplist;
-	dplist = glGenLists(1);
-	glNewList(dplist,GL_COMPILE);
-	double halfSize = size*0.5;
-	double heig=height*0.5;
-	glBegin(GL_TRIANGLES);
-	//Front
-	glNormal3f(0,0,1);
-	glVertex3f(0,heig,0);
-	glVertex3f(-halfSize,-heig,halfSize);
-	glVertex3f(halfSize,-heig,halfSize);
-	//left
-	glNormal3f(-1,0,0);
-	glVertex3f(0,heig,0);
-	glVertex3f(-halfSize,-heig,halfSize);
-	glVertex3f(-halfSize,-heig,-halfSize);
-	//back
-	glNormal3f(0,0,-1);
-	glVertex3f(0,heig,0);
-	glVertex3f(-halfSize,-heig,-halfSize);
-	glVertex3f(halfSize,-heig,-halfSize);
-	//right
-	glNormal3f(0,0,-1);
-	glVertex3f(0,heig,0);
-	glVertex3f(halfSize,-heig,halfSize);
-	glVertex3f(halfSize,-heig,-halfSize);
-	
-	glEnd();
-	//bottom
-	glBegin(GL_QUADS);
-	glNormal3f(0,-1,0);
-	glVertex3f(-halfSize,-heig,-halfSize);
-	glVertex3f(-halfSize,-heig,halfSize);
-	glVertex3f(halfSize,-heig,halfSize);
-	glVertex3f(halfSize,-heig,-halfSize);
-	glEnd();
-	
-	glEndList();
-	return dplist;	
-}
 GLuint BasicCad::MakeFrustumShape(const float& bottom_size,const float& top_size,const float& height)
 {
 	GLuint dplist;
@@ -266,10 +188,5 @@ GLuint BasicCad::MakeFrustumShape(const float& bottom_size,const float& top_size
 	glEnd();
 	glEndList();
 	return dplist;
-}
-GLuint MakeOctagon(const float&  size, const float& thickness);
-GLuint BanTay(const float& sizeLapGhep)
-{
-	
 }
 
