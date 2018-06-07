@@ -9,3 +9,6 @@ Slide
 
 Website
 	http://phattrienphanmem123az.com/
+
+Huong dan them thu vien freeglut: 
+	https://drive.google.com/open?id=1bck6q5LbenQx4Hs1q2h4NxQW94AxH1Sv
