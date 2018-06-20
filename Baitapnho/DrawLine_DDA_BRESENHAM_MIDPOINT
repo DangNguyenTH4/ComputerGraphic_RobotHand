@@ -1,0 +1,210 @@
+//Gia su cho diem ban dau la : (x y) khi ta xac dinh duoc cach ve Bresenham,Midpoint,DDA của x,y khi 0<k<1
+//=>theo tính chất đối xứng sẽ có thể suy ra những điểm khác nhanh chóng: (y,x),(y,-x)(-x,y)(-x,-y),(-y,-x),(-y,x),(x,-y)
+
+void DDA(int x1,int y1,int x2,int y2,int c)
+{
+	int dx=x2-x1,dy=y2-y1,x=x1,y=y1;		
+		if(abs(dx)>abs(dy)) //x bien thien nhieu hon y
+		{
+			if(dy==0)
+			{
+				while(x<=x2)
+				{
+					putpixel(x,y,c)
+					x++;
+				}
+			}
+			else if(x2>=x1)
+			{
+				while(x<=x2)
+				{
+					putpixel(x,y,c);
+					x++;
+					y+=(double)(dy/dx);
+				}
+			}
+			else
+			{
+				while(x>=x2)
+				{
+					putpixel(x,y,c);
+					x--;
+					y+=(double)(dy/dx); //dx,dy trai dau nen van de la +
+				}
+			}
+		}
+		else //y bien thien nhieu hon x
+		{
+			if(dx==0)
+			{
+				while(x<=x2)
+				{
+					putpixel(x,y,c)
+					y++;
+				}
+			}
+			else if(y2>=y1)
+			{
+				while(y<=y2)
+				{
+					putpixel(x,y,c);
+					y++;
+					x+=(double)(dx/dy);
+				}
+			}
+			else
+			{
+				while(y>=y2)
+				{
+					putpixel(x,y,c);
+					y--;
+					x+=(double)(dx/dy);
+				}
+			}
+		}
+}			
+void Bresenham(int x1,int y1,int x2,int y2,int c)
+{
+	int dx=x2-x1,dy=y2-y1,x=x1,y=y1;
+	float d;
+
+		if(abs(dx)>abs(dy)) //x bien thien nhieu hon y
+		{
+			if(dy==0)
+			{
+				while(x<=x2)
+				{
+					putpixel(x,y,c)
+					x++;
+				}
+			}
+			else if(dx>0&&dy>0)
+			{
+				d = dx-2*dy;
+					while(x<=x2)
+					{
+						putpixel(x,y,c);
+						if(d>0) d-=2*dy;
+						else{d+=2*(dx-dy); y+=1;}
+						x++;
+					}
+			}
+			else if(dx<0&&dy<0)
+			{
+				d=-dx+2*dy;
+				while(x>=x2)
+				{
+					
+					putpixel(x,y,c);
+					if(d>0) d+=2*dy;
+					else {d+=2*(dy-dx); y--;}
+					x--;
+				}
+			}
+			else if(dx<0&&dy>0)
+			{
+				d=-dx-2*dy;
+				while(x>=x2)
+				{
+					putpixel(x,y,c);
+					if(d>0) d-=2*dy;
+					else {d+=2*(-dy-dx); y++;}
+					x--;
+				}
+			}
+			else if(dx>0&&dy<0)
+			{
+				d=dx+2*dy;
+				while(x<=x2)
+				{
+					putpxel(x,y,c);
+					if(d>0) d+=2*dy;
+					else {d+=2*(dx+dy);
+				}
+			}
+		}
+		else //y bien thien nhieu hon x
+		{
+			if(dx==0)
+			{
+				while(x<=x2)
+				{
+					putpixel(x,y,c)
+					y++;
+				}
+			}
+			else if(dy>0&&dx>0)
+			{
+				while(y<=y2)
+				{
+					d=dy-2*dx;
+					while(y<=y2)
+					{
+						putpixel(x,y,c);
+						if(d>0)d-=2*dx;
+						else{d+=2*(dy=-dx);x++;}
+						y++;
+					}
+				}
+			}
+			else if(dy>0&&dx<0)
+			{
+				d = -dx-2*dy;
+					while(x>=x2)
+					{
+						putpixel(x,y,c);
+						if(d>0) d-=2*dy;
+						else{d+=2*(-dx-dy); y+=1;}
+						x--;
+					}
+				
+			}	
+			else if(dx<0&&dy<0)
+			{
+				
+			}
+			else if(dy<0&&dx>0)
+		}
+
+}
+void Midpoint(int x1,int y1,int x2,int y2,int c)
+{	
+	int dx=x2-x1,dy=y2-y1,x=x1,y=y1;
+	float d;
+
+		if(abs(dx)>abs(dy)) //x bien thien nhieu hon y
+		{
+			if(dy==0)
+			{
+				while(x<=x2)
+				{
+					putpixel(x,y,c)
+					x++;
+				}
+			}
+			else if(dx>0&&dy>0)
+			else if(dx<0&&dy<0)
+			else if(dx<0&&dy>0)
+			else if(dx>0&&dy<0)
+		}
+		else //y bien thien nhieu hon x
+		{
+			if(dx==0)
+			{
+				while(x<=x2)
+				{
+					putpixel(x,y,c)
+					y++;
+				}
+			}
+			else if(dy>0&&dx>0)
+			else if(dy>0&&dx<0)
+			else if(dx<0&&dy<0)
+			else if(dy<0&&dx>0)
+		}
+
+}
+
+
+
+
